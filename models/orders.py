@@ -1242,6 +1242,10 @@ class mercadolibre_orders(models.Model):
                 #'email': Buyer['email'],
                 'meli_buyer_id': Buyer['id'],
             }
+            if company and company.id:
+            	meli_buyer_fields["company_id"] = company.id
+            
+            
             meli_buyer_fields.update(self.fix_locals(Receiver=Receiver,Buyer=Buyer))
             if company:
                 meli_buyer_fields["lang"] =  company.partner_id.lang
