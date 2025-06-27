@@ -293,7 +293,8 @@ class MeliUtil(models.AbstractModel):
         if not company:
             company = self.env.user.company_id
 
-        api_client = ApiClient()
+        #api_client = ApiClient()
+        api_client = ApiClient(configuration=configuration)
         api_rest_client = MeliApi(api_client)
         api_rest_client.client_id = company.mercadolibre_client_id
         api_rest_client.client_secret = company.mercadolibre_secret_key
@@ -321,10 +322,28 @@ class MeliUtil(models.AbstractModel):
 
                 status = "status" in rjson and rjson["status"]
                 cause = "cause" in rjson and rjson["cause"]
+                
+                
+                if status==429:
+                    return api_rest_client
+                
 
                 if status==500 and cause=="Internal Server Error":
-                    _logger.warning(rjson)
+                    #_logger.warning(rjson)
                     return api_rest_client
+                    
+                    
+                if status==504 and cause=="Gateway Time-out":
+                    return api_rest_client
+
+                if cause and status and int(status)>=500:
+                    return api_rest_client
+
+                right_access_token = ("-"+str(api_rest_client.seller_id)) in str(api_rest_client.access_token)
+                if not right_access_token:
+                    api_rest_client.needlogin_state = True
+                    
+               
 
                 #_logger.info(rjson)
                 #if "error" in rjson:

@@ -29,7 +29,7 @@ class StockMove(models.Model):
             is_meli = (mov.product_id.meli_id and mov.product_id.meli_pub)
 
             if (config and config.mercadolibre_cron_post_update_stock and is_meli):
-                _logger.info("meli_update_boms > process_meli_stock_moves_update() "+str(config and config.name))
+                _logger.info("meli_update_boms > process_meli_stock_moves_update() "+str(config and config.name)+" bm_product_id > "+str(bm_product_id.display_name))
                 product_id.process_meli_stock_moves_update()
                 #product_id.product_post_stock()
 
