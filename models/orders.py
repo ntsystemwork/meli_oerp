@@ -402,7 +402,7 @@ class sale_order(models.Model):
                         stock_picking_set_quantities(picking=spick)
 
                     #Validar el picking para mover físicamente y generar valoración
-                    if spick.state == 'assigned':Add commentMore actions
+                    if spick.state == 'assigned':
                         spick.button_validate()
 
                 except Exception as e:
