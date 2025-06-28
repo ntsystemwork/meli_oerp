@@ -3933,7 +3933,7 @@ class product_product(models.Model):
     meli_image_update = fields.Datetime(string="Image update",index=True)
     meli_price_update = fields.Datetime(string="Price update",index=True)
     meli_stock_update = fields.Datetime(string="Stock Update",help="Ultima actualizacion de stock de Odoo a ML",index=True)
-    def meli_stock_moves_update(self):
+    def _meli_stock_moves_update(self):
         for var in self:
             st_mv_ids = var.stock_move_ids and var.stock_move_ids.filtered(lambda x: x.create_date)
             if "mrp.bom" in self.env:
