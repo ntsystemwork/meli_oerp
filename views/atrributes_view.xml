@@ -99,7 +99,7 @@
                  <field name="name" string="Attribute Nombre/ID" filter_domain="['|', ('name', 'ilike', self), ('att_id', 'ilike', self)]"/>
                  <field name="att_id" string="Attribute ID"/>
                  <separator/>
-                 <filter string="Es Requerido" name="meli_required_filter" domain="[('required','!=',False)]" />Add commentMore actions
+                 <filter string="Es Requerido" name="meli_required_filter" domain="[('required','!=',False)]" />
                  <filter string="Es variante" name="meli_variation_attribute_group_filter" domain="[('variation_attribute','!=',False)]" />
                  <filter string='Variante' domain="[]"
         								context="{'group_by' : 'variation_attribute'}" name="meli_variation_attribute_group_filter"/>
