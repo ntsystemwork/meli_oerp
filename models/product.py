@@ -3933,26 +3933,23 @@ class product_product(models.Model):
     meli_image_update = fields.Datetime(string="Image update",index=True)
     meli_price_update = fields.Datetime(string="Price update",index=True)
     meli_stock_update = fields.Datetime(string="Stock Update",help="Ultima actualizacion de stock de Odoo a ML",index=True)
-    def _meli_stock_moves_update( self ):
+    def meli_stock_moves_update(self):
         for var in self:
-            _st_mv_ids = var.stock_move_ids and var.stock_move_ids.filtered(lambda x: x.create_date )
-
-            if ("mrp.bom" in self.env):
-            	product_id = var
-               #check all boms of this kit
-		        bom_ids = self.env['mrp.bom'].search([('product_id','=',product_id.id)]) or []
-                _st_mv_ids = _st_mv_ids or self.env['stock.move']
+            st_mv_ids = var.stock_move_ids and var.stock_move_ids.filtered(lambda x: x.create_date)
+            if "mrp.bom" in self.env:
+                product_id = var
+                # check all boms of this kit
+                bom_ids = self.env['mrp.bom'].search([('product_id', '=', product_id.id)]) or []
+                st_mv_ids = st_mv_ids or self.env['stock.move']
                 for bom_id in bom_ids:
-                    if (not bom_id or not bom_id.bom_line_ids):
-                        continue;
-                    #check moves of all the components of this kit
+                    if not bom_id or not bom_id.bom_line_ids:
+                        continue
+                    # check moves of all the components of this kit
                     for bm_line_id in bom_id.bom_line_ids:
                         bm_pr_id = bm_line_id.product_id
-                        _st_mv_ids+= bm_pr_id.stock_move_ids and bm_pr_id.stock_move_ids.filtered(lambda x: x.create_date )
+                        st_mv_ids += bm_pr_id.stock_move_ids and bm_pr_id.stock_move_ids.filtered(lambda x: x.create_date)
             
-            
-            var.meli_stock_moves_update = (_st_mv_ids and _st_mv_ids.sorted(lambda o: o.create_date, reverse=True)[0].create_date) or False
-
+            var.meli_stock_moves_update = (st_mv_ids and st_mv_ids.sorted(lambda o: o.create_date, reverse=True)[0].create_date) or False
     @api.depends('stock_move_ids')
     def process_meli_stock_moves_update( self ):
         for var in self:
