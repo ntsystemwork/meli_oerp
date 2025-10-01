@@ -1201,11 +1201,21 @@ class mercadolibre_shipment(models.Model):
             sitem = self.env["mercadolibre.shipment.item"].create(ifields)
         return sitem
 
-    def update( self, context=None, meli=None, config=None ):
+    # def update( self, context=None, meli=None, config=None ):
+    #
+    #     #_logger.info( "update: context: "+str(context)+ " meli: "+str(meli)+ " config: " +str(config) )
+    #
+    #     self.fetch_shipment( self.order, meli=meli, config=config )
+    #
+    #     return {}
 
-        #_logger.info( "update: context: "+str(context)+ " meli: "+str(meli)+ " config: " +str(config) )
+    def update(self, context=None, meli=None, config=None):
 
-        self.fetch_shipment( self.order, meli=meli, config=config )
+        if self.sale_order:
+            _logger.info(f"Shipment {self.shipping_id} already has sale order {self.sale_order.name}. Skipping update.")
+            return {'warning': 'Shipment already has a sale order associated'}
+
+        self.fetch_shipment(self.order, meli=meli, config=config)
 
         return {}
 
