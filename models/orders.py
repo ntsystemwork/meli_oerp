@@ -2911,20 +2911,21 @@ class sale_order_cancel_wiz_meli(models.TransientModel):
 
             for order_id in orders_ids:
 
-                #_logger.info("cancel_order: %s " % (order_id) )
+                _logger.info("cancel_order: %s " % (order_id) )
 
                 order = orders_obj.browse(order_id)
-                if (order and order.state in ["done"] and self.cancel_blocked):
+                _logger.warning(f"order:{order.state in ['done']}")
+                if (order and order.state != "cancel" and self.cancel_blocked):
                     #asd
-                    #_logger.info("cancel_order: unblock")
+                    _logger.info("cancel_order: unblock")
                     order.action_unlock()
-                    order.action_cancel()
+                    order._action_cancel()
 
                 if (order and order.state in ["draft","sale","sent"]):
-                    order.action_cancel()
+                    order._action_cancel()
 
         except Exception as e:
-            #_logger.info("order_update > Error cancelando ordenes")
+            _logger.info("order_update > Error cancelando ordenes")
             _logger.error(e, exc_info=True)
             self._cr.rollback()
 
